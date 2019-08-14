@@ -10,3 +10,33 @@ This repository contains a .tex file that describes the project in LaTex. Based 
 3. Open a LaTex editor, e.g, Overleaf.
 4. Import.
 5. Compile (and generate .pdf file).
+
+## Completing sections (in progress):
+
+- [x] 1. INTRODUCCIÓN
+- [x] 1.1. Base tecnológica
+- [x] 1.2. Trabajos similares encontrados
+- [x] 1.2.1. Fon
+
+- [ ] 2. SOLUCIÓN PROPUESTA
+- [ ] 2.1. Diseño
+- [ ] 2.1.1. Roles
+- [ ] 2.1.1. Arquitectura
+- [x] 2.2. Implementación
+- [ ] 2.2.1. Front-end
+- [ ] 2.2.2. Back-end
+
+- [x] 3. PRUEBAS
+- [ ] 3.1. Tests
+
+- [ ] 4. VIABILIDAD DE NEGOCIO
+- [ ] 4.1. Legislación
+
+- [x] 5. CONCLUSIONES
+
+- [x] 6. LÍNEAS FUTURAS
+- [x] 6.1. Añadir forma de pago DAI
+
+- [ ] 7. REPOSITORIO
+
+- [ ] REFERENCIAS
