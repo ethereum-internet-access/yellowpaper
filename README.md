@@ -3,7 +3,7 @@ Scientific-technical document about the project in Ethereum Yellow Paper form
 
 This repository contains a .tex file that describes the project in LaTex. Based on Ethereum Yellow Paper template.
 
-## How to use it?
+## How to use it:
 
 1. Download Ethereum Yellow Paper repository in GitHub.
 2. Replace that repository with our repository files (.tex and .png from 'images' folder).
@@ -17,6 +17,7 @@ This repository contains a .tex file that describes the project in LaTex. Based 
 - [x] 1.1. Base tecnológica
 - [x] 1.2. Trabajos similares encontrados
 - [x] 1.2.1. Fon
+- [x] 1.2.2. Hotspot me de Hackathon ETH Berlín Zwei.
 
 - [ ] 2. SOLUCIÓN PROPUESTA
 - [ ] 2.1. Diseño
@@ -36,6 +37,7 @@ This repository contains a .tex file that describes the project in LaTex. Based 
 
 - [x] 6. LÍNEAS FUTURAS
 - [x] 6.1. Añadir forma de pago DAI
+- [x] 6.2. Usar Raspberry Pi 4 Modelo B
 
 - [ ] 7. REPOSITORIO
 
