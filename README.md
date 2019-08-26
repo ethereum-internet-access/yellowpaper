@@ -17,7 +17,7 @@ This repository contains a .tex file that describes the project in LaTex. Based 
 - [x] 1.1. Base tecnológica
 - [x] 1.2. Trabajos similares encontrados
 - [x] 1.2.1. Fon
-- [x] 1.2.2. Hotspot me de Hackathon ETH Berlín Zwei.
+- [x] 1.2.2. Hotspot me de Hackathon ETH Berlín Zwei
 
 - [ ] 2. SOLUCIÓN PROPUESTA
 - [ ] 2.1. Diseño
