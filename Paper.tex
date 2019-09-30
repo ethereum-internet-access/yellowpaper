@@ -44,7 +44,7 @@
 
 \usepackage[final]{microtype} % https://tex.stackexchange.com/questions/75140/is-it-possible-to-make-latex-mark-overfull-boxes-in-the-output#comment382776_75142
 
-\input{Version.tex}
+% \input{Version.tex}
 % Default rendering options
 \definecolor{pagecolor}{rgb}{1,0.98,0.9}
 \def\YellowPaperVersionNumber{unknown revision}
@@ -80,9 +80,11 @@ Este documento presenta una soluci\'on novedosa para habilitar el acceso a Inter
 
 \maketitle
 
+\tableofcontents
+
+
 \setlength{\columnsep}{20pt}
 \begin{multicols}{2}
-
 \section{Introducci\'on}\label{sec:introduction}
 
 El acceso a Internet es clave para la Sociedad de la Informaci\'on. En la actualidad, atendiendo al \'ambito geogr\'afico \'este puede venir dado a trav\'es de redes de \'area local [Stallings 04]. Las redes inal\'ambricas por sus caracter\'\i{}sticas intr\'\i{}nsecas son id\'oneas por su movilidad, f\'acil configuraci\'on, mantenimiento, etc. Sin duda, la tecnolog\'\i{}a Wi-Fi se ha convertido en un est\'andar \textit{de facto} en este tipo de redes.
@@ -106,7 +108,7 @@ usuario que presta su conexi\'on. El sistema facilita medios de pago electr\'oni
 \begin{center}
 %\begin{figure}[h]
 %  \centering
-  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/lafonera-sourcewikipedia}
+  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/lafonera-sourcewikipedia.eps}
 %  \caption{Figura 1. La Fonera}
 %\end{figure}
 \\
@@ -153,7 +155,7 @@ Se ha utilizado la Raspberry Pi 3 Modelo B (v\'ease figura 2). Un ordenador de p
 \begin{center}
 %\begin{figure}[h]
 %  \centering
-  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/rpi3modelb-sourceamazon.png}
+  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/rpi3modelb-sourceamazon.eps}
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
@@ -227,7 +229,7 @@ Como debilidad del pago con ETH, se puede achacar la volatilidad de su precio (v
 \begin{center}
 %\begin{figure}[h]
 %  \centering
-  \includegraphics[keepaspectratio, width=0.481125\textwidth]{images/ethcurrentprice-sourcecoinbase}
+  \includegraphics[keepaspectratio, width=0.481125\textwidth]{images/ethcurrentprice-sourcecoinbase.eps}
 %  \caption{Figura 3. Variación cotización ETH (11/08/2019)}
 %\end{figure}
 \\
@@ -256,7 +258,7 @@ Para ello, Docker ofrece un orquestador (de c\'odigo abierto) llamado Docker Swa
 \begin{center}
 %\begin{figure}[h]
 %  \centering
-  \includegraphics[keepaspectratio, width=0.481125\textwidth]{images/swarm-diagram-sourcedocker}
+  \includegraphics[keepaspectratio, width=0.481125\textwidth]{images/swarm-diagram-sourcedocker.eps}
 %  \caption{Figura 3. Variación cotización ETH (11/08/2019)}
 %\end{figure}
 \\
@@ -830,7 +832,7 @@ Note we use $\Theta_{4}$ and $\Lambda_{4}$ to denote the fact that only the firs
 
 After the message call or contract creation is processed, the refund counter has to be incremented for the accounts that were self-destructed throughout its invocation.
 \begin{equation}
-	A'_{r} \equiv A_{r} + \sum_{i \in A_{s}} R_{selfdestruct}
+        A'_{r} \equiv A_{r} + \sum_{i \in A_{s}} R_{selfdestruct}
 \end{equation}
 
 Then the state is finalised by determining the amount to be refunded, $g^*$ from the remaining gas, $g'$, plus some allowance from the refund counter, to the sender at the original rate.
