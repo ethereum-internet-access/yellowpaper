@@ -8,7 +8,7 @@
 \usepackage{subfig}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[a4paper,width=170mm,top=18mm,bottom=21mm,includeheadfoot]{geometry}
+\usepackage[a4paper,width=160mm,top=18mm,bottom=21mm,includeheadfoot]{geometry}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{verbatim}
@@ -83,7 +83,8 @@
 %\renewcommand{\itemhook}{\setlength{\topsep}{0pt}  \setlength{\itemsep}{0pt}\setlength{\leftmargin}{15pt}}
 
 
-\title{ETH-Paid Internet Access\\ {\smaller \textbf{Master thesis}}}
+\title{Wireless service accounting based on Ethereum state channels
+- Master Thesis}
 
 \author{
   A. Egio,
@@ -118,7 +119,7 @@
     mechanisms to reduce advanced wireless
     (i. e. 5G) services market friction between neutral host
     providers, virtual operators and operators
-    licensing spectrum bands to states;
+    licensing spectrum bands to nations' governments;
     guarantee transparency to consumers,
     and provide a fully GDPR compliant
     schema using a self-sovereign identity system.
@@ -258,23 +259,6 @@ hostapd\cite{hostapd} daemon over Raspberry's WiFi chipset.
 Raspberry Pi was also connected using ethernet cable
 to an optical fiber commercial router.
 
-\vspace{0.35cm}
-
-As dynamic host configuration server for the wireless
-network, dnsmasq was used.
-
-\vspace{0.35cm}
-
-iptables\cite{iptables} was used as a firewall running
-inside the Raspberry; by default, it was configured to
-drop all packet
-forwarding traffic from users connected to the wireless
-domain and at the same time to redirect all
-forwarding traffic to Raspberry's HTTP port where a
-captive portal was deployed.
-
-
-
 \begin{center}
 %\begin{figure}[h]
 %  \centering
@@ -286,29 +270,111 @@ Figure 2. Raspberry Pi 3 Model B. Source: \cite{RaspberryPi3}
 \\
 \end{center}
 
-Un resumen de sus especificaciones se da a continuación (véase tabla 1):
+\vspace{0.35cm}
+
+Dnsmasq\cite{dnsmasq} was used
+as dynamic host configuration server for the wireless
+network and
+iptables\cite{iptables} was used as a firewall running
+both inside the Raspberry; by default, iptables
+was configured to
+drop all packet
+forwarding traffic from users connected to the wireless
+domain and at the same time to redirect all
+traffic to Raspberry's HTTP port where a
+captive portal was listening incoming connections.
+
+
+
+
+
+
+
+
+\section{Further steps}
+
+\end{multicols}
 \begin{center}
-%\begin{tabular} to 0.5\textwidth { | X[l] | X[r] | }
-\begin{tabular}{ | m{0.125\textwidth} | m{0.3125\textwidth} | }
- \hline
- Especificaciones & Raspberry Pi 3 Modelo B \\
- \hline
- Procesador & Broadcom BCM2837, Cortex-A53 (ARMv8) 64-bit SoC @ 1,2 GHz \\
-\hline
- RAM & 1 GB \\
-\hline
- Conectividad & Wi-Fi 802.11 b/g/n (2,4 GHz) Bluetooth 4.1 Puerto Ethernet de hasta 100 Mbps \\
-\hline
- Puertos & HDMI completo, 4 USB 2.0, MicroSD, CSI camera, DSI display \\
-\hline
- Memoria & MicroSD \\
-\hline
-\end{tabular}
-\newline
+%\begin{figure}[h]
+  %  \centering
+  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/bc5g-y.eps}
+  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/bc5g2-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 3. Anonymicity, identity, KyC and GDPR.
+\\
 \end{center}
-Tabla 1. Especificaciones de Raspberry Pi 3 Modelo B
-%\newline
-Aunque no se indica expresamente si es hardware libre (\textit{open hardware}) o con derechos de marca, en su página Web oficial explican que disponen de contratos de distribución y venta con dos empresas. Pero al mismo tiempo, cualquiera puede convertirse en revendedor o redistribuidor de las tarjetas Raspberry Pi [RaspberryPiBuy 19].
+\begin{multicols}{2}
+
+\end{multicols}
+\begin{center}
+%\begin{figure}[h]
+  %  \centering
+  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/slices-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 4. Slicing model.
+\\
+\end{center}
+\begin{multicols}{2}
+
+
+\end{multicols}
+\begin{center}
+%\begin{figure}[h]
+  %  \centering
+  \includegraphics[keepaspectratio, width=0.6\textwidth]{images/bc5g/sc1-y.eps}
+  \includegraphics[keepaspectratio, width=0.6\textwidth]{images/bc5g/sc2-y.eps}
+  \includegraphics[keepaspectratio, width=0.6\textwidth]{images/bc5g/sc3-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 5. State channels support instant portability
+between different operators with minimal fee.
+\\
+\end{center}
+\begin{multicols}{2}
+
+
+\end{multicols}
+\begin{center}
+%\begin{figure}[h]
+  %  \centering
+  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/beyond-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 6. Full tokenization of wireless services from
+the spectrum licensing to the citizen.
+\\
+\end{center}
+\begin{multicols}{2}
+
+%% Un resumen de sus especificaciones se da a continuación (véase tabla 1):
+%% \begin{center}
+%% %\begin{tabular} to 0.5\textwidth { | X[l] | X[r] | }
+%% \begin{tabular}{ | m{0.125\textwidth} | m{0.3125\textwidth} | }
+%%  \hline
+%%  Especificaciones & Raspberry Pi 3 Modelo B \\
+%%  \hline
+%%  Procesador & Broadcom BCM2837, Cortex-A53 (ARMv8) 64-bit SoC @ 1,2 GHz \\
+%% \hline
+%%  RAM & 1 GB \\
+%% \hline
+%%  Conectividad & Wi-Fi 802.11 b/g/n (2,4 GHz) Bluetooth 4.1 Puerto Ethernet de hasta 100 Mbps \\
+%% \hline
+%%  Puertos & HDMI completo, 4 USB 2.0, MicroSD, CSI camera, DSI display \\
+%% \hline
+%%  Memoria & MicroSD \\
+%% \hline
+%% \end{tabular}
+%% \newline
+%% \end{center}
+%% Tabla 1. Especificaciones de Raspberry Pi 3 Modelo B
+%% %\newline
+%% Aunque no se indica expresamente si es hardware libre (\textit{open hardware}) o con derechos de marca, en su página Web oficial explican que disponen de contratos de distribución y venta con dos empresas. Pero al mismo tiempo, cualquiera puede convertirse en revendedor o redistribuidor de las tarjetas Raspberry Pi [RaspberryPiBuy 19].
 
 \vspace{0.35cm}
 
@@ -429,6 +495,7 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \bibitem{Stallings04} W. Stallings. "Comunicaciones y redes de computadores". 1 Septiembre 2004. Páginas 904. Pearson Prentice Hall. ISBN-13: 978-8420541105.
 \end{thebibliography}
 \clearpage
+
 
 \end{multicols}
 
