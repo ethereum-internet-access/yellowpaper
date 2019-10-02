@@ -254,19 +254,22 @@ It can be integrated into multiple business areas.
 
 In order to support the PoC a
 Raspberry Pi 3 Model B (see figure 2) has been used
-as a single board computer to provide a WiFi access point using
+as a single board computer to host all the required software.
+Tested operative system was OSMC\cite{osmc} (a Debian based
+GNU-Linux flavor) mainly used as media-center.
+A WiFi access point using
 hostapd\cite{hostapd} daemon over Raspberry's WiFi chipset.
 Raspberry Pi was also connected using ethernet cable
-to an optical fiber commercial router.
+to an optical fiber commercial router (\textit{see figure 2}).
 
 \begin{center}
 %\begin{figure}[h]
 %  \centering
-  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/rpi3modelb-sourceamazon.eps}
+  \includegraphics[keepaspectratio, width=0.5\textwidth]{images/physical-setup-y.eps}
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
-Figure 2. Raspberry Pi 3 Model B. Source: \cite{RaspberryPi3}
+Figure 2. Physical Setup.
 \\
 \end{center}
 
@@ -274,7 +277,7 @@ Figure 2. Raspberry Pi 3 Model B. Source: \cite{RaspberryPi3}
 
 Dnsmasq\cite{dnsmasq} was used
 as dynamic host configuration server for the wireless
-network and
+network users and
 iptables\cite{iptables} was used as a firewall running
 both inside the Raspberry; by default, iptables
 was configured to
@@ -284,7 +287,25 @@ domain and at the same time to redirect all
 traffic to Raspberry's HTTP port where a
 captive portal was listening incoming connections.
 
+\vspace{0.35cm}
 
+Main idea is that the users can join freely
+to the wireless hotspot and access the web captive portal
+(\textit{hosted on the same Raspberry}) application that
+communicates with a back-end that controls iptables
+rules and also an Infura light proxy able to relay RPC
+calls arriving on 8545 port of the Raspberry.
+
+\begin{center}
+%\begin{figure}[h]
+%  \centering
+  \includegraphics[keepaspectratio, width=0.5\textwidth]{images/con-flow-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 3. Physical Setup.
+\\
+\end{center}
 
 
 
@@ -480,6 +501,8 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \bibitem{hostapd} \href{https://w1.fi/hostapd/}{https://w1.fi/hostapd/}
 \bibitem{iptables} \href{https://linux.die.net/man/8/iptables}{https://linux.die.net/man/8/iptables}
 \bibitem{dnsmasq} \href{https://en.wikipedia.org/wiki/Dnsmasq}{https://en.wikipedia.org/wiki/Dnsmasq}
+\bibitem{osmc} \href{https://osmc.tv/}{https://osmc.tv/}
+
 
 
 \bibitem{Coinbase19} Coinbase. Intercambio de moneda digital \href{https://www.coinbase.com/price/ethereum}{https://www.coinbase.com/price/ethereum}
