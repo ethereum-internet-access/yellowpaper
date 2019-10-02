@@ -1,5 +1,4 @@
-\documentclass[9pt,oneside]{amsart}
-
+\documentclass[12pt]{amsart}
 %\usepackage{tweaklist}
 \usepackage{cancel}
 \usepackage{xspace}
@@ -9,7 +8,7 @@
 \usepackage{subfig}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[a4paper,width=170mm,top=18mm,bottom=22mm,includeheadfoot]{geometry}
+\usepackage[a4paper,width=170mm,top=18mm,bottom=21mm,includeheadfoot]{geometry}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{verbatim}
@@ -22,11 +21,13 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{afterpage}
 \usepackage{tikz}
-\usepackage[bookmarks=true, unicode=true, pdftitle={Ethereum Yellow Paper: a formal specification of Ethereum, a programmable blockchain}, pdfauthor={Dr. Gavin Wood},pdfkeywords={Ethereum, Yellow Paper, blockchain, virtual machine, cryptography, decentralised, singleton, transaction, generalised},pdfborder={0 0 0.5 [1 3]}]{hyperref}
+\usepackage[hyperfootnotes=false, bookmarks=true, unicode=true, pdftitle={Ethereum Yellow Paper: a formal specification of Ethereum, a programmable blockchain}, pdfauthor={Dr. Gavin Wood},pdfkeywords={Ethereum, Yellow Paper, blockchain, virtual machine, cryptography, decentralised, singleton, transaction, generalised},pdfborder={0 0 0.5 [1 3]}]{hyperref}
 %,pagebackref=true
 
 \usepackage{tabu} %requires array.
-
+\def\els@aparagraph[#1]#2{\elsparagraph[#1]{#2}}
+\def\els@bparagraph#1{\elsparagraph*{#1}}
+\newcommand\eatpunct[1]{}
 %This should be the last package before \input{Version.tex}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 % "hyperref loads the url package internally. Use \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref} to pass the option to the url package when it is loaded by hyperref. This avoids any package option clashes." Source: <https://tex.stackexchange.com/questions/3033/forcing-linebreaks-in-url/3034#comment44478_3034>.
@@ -46,6 +47,19 @@
 \MakeOuterQuote{"}
 
 \usepackage[final]{microtype} % https://tex.stackexchange.com/questions/75140/is-it-possible-to-make-latex-mark-overfull-boxes-in-the-output#comment382776_75142
+\usepackage{lastpage}
+\usepackage{footnote}
+\usepackage{caption}
+\definecolor{Orange}{rgb}{0.241,0.349,0.090}
+\usepackage{bbding}
+\usepackage{shortvrb}
+%% \usepackage{draftwatermark}
+%% \SetWatermarkText{Esborrany}
+%% \SetWatermarkScale{0.5}
+%% \usepackage{tocloft}
+% \usepackage{hyperref}
+% \usepackage{bookmark}
+\usepackage[titletoc]{appendix}
 
 
 % \input{Version.tex}
@@ -69,12 +83,13 @@
 %\renewcommand{\itemhook}{\setlength{\topsep}{0pt}  \setlength{\itemsep}{0pt}\setlength{\leftmargin}{15pt}}
 
 
-\title{ETH-Paid Internet Access\\ {\smaller \textbf{Proyecto final de máster (versi\'on texto en Español)}}}
+\title{ETH-Paid Internet Access\\ {\smaller \textbf{Master thesis}}}
+
 \author{
-    A. Egio, L. González, A. Pardo, T. Romero\\
-    UPC School, Carrer de Badajoz 73, 08005 Barcelona - Catalunya\\
-    E-mail: [alfonsoea, lluisgv2, albertopm5, joserc25]
+  A. Egio,
+  L. González, A. Pardo, T. Romero
 }
+
 
 \begin{document}
 
@@ -82,111 +97,184 @@
 
 
 \begin{abstract}
-  This document shows a new solution to get Internet acces to users
-  using Wifi networks. The innovation is about to add a time
-  per use payment gateway
-  using the ethereum ETH crytocurrency and
-  tokens (new Ethereum's cryptoactives).
-  %% Este documento presenta una soluci\'on novedosa para habilitar el acceso a Internet a usuarios mediante redes Wi-Fi. La innovaci\'on consiste en añadir
-  %% una pasarela de pago por tiempo de uso a través
-  %% de criptomonedas ETH de Ethereum y tokens
-  %% (nuevos criptoactivos de Ethereum).
-  %% Se describe la construcci\'on de un
-  %% prototipo basado en hardware libre (Raspberry Pi) para llevar a cabo la prueba de concepto. Paralelamente, se estudia la viabilidad de negocio en torno a ello. Por ejemplo, orientado a ciudades/ayuntamientos.
+  \begin{center}
+    This document contains authors' ``\textit{Blockchain
+      technologies master}''\footnote{UPC School
+      of Professional \& Executive Development}
+    final thesis. The project described in the document
+    consists on a technological proof
+    of concept of an internet access service consumption
+    using a state channel smart contract as
+    mean of payment. After a brief
+    introduction, there's a first motivation of
+    the use case included;
+    in the following sections
+    there's a detailed explanation of
+    the architecture, implementation and
+    security considerations;
+    after that it is described a more
+    general approach on using blockchain technologies
+    and state channels in particular to provide
+    mechanisms to reduce advanced wireless
+    (i. e. 5G) services market friction between neutral host
+    providers, virtual operators and operators
+    licensing spectrum bands to states;
+    guarantee transparency to consumers,
+    and provide a fully GDPR compliant
+    schema using a self-sovereign identity system.
+  \end{center}
 \end{abstract}
 
 \maketitle
 
 \tableofcontents
 
+\newpage
 
 \setlength{\columnsep}{20pt}
 \begin{multicols}{2}
-\section{Introducci\'on}\label{sec:introduction}
-\paragraph
-\noindent
-Internet access nowadays has become a key factor
-and a must for information society. Currently and depending
-on geographical location, internet access
-can be provided by local area networks [Stallings 04].
-Due to its characteristics wireless networks
-are ideal for movility and ease of configuration
-and maintenance. WiFi technology has become
-a de-facto standard.
+\section{Introduction}\label{sec:introduction}
 
+\vspace{0.35cm}
+As exposed in \cite{spectrumnh} although radio spectrum
+``\textit{is often
+  referred to as a `scarce resource`}'' there are
+spectrum management strategies
+being researched to improve and
+support a brand new model of services
+into the market; in particular there are
+multiple 5G\cite{5g} innovative projects and initiatives
+that try to solve this using Software
+Defined Network\cite{sdns}
+and Network Function Virtualization\cite{nfv}.
 
-Por otro lado, la irrupción en los últimos
-años de la tecnología Blockchain
-ha traído consigo un nuevo paradigma
-en el desarrollo de aplicaciones
-descentralizadas (en adelante, \DH App).
-Las criptomonedas (tales como Bitcoin
-[Nakamoto 08], ETH de Ethereum,
-XRP de Ripple, etc.)
-son una de las primeras aplicaciones. Éstas suponen
-una nueva forma de pago e intercambio de dinero más eficiente a la tradicional (emitida por bancos centrales y de forma centralizada).
+\vspace{0.35cm}
 
-%\subsection{Background} \label{ch:backg}
-\subsection{Base tecnológica} \label{ch:backg}
+Since spectrum is a scarce resource, it can
+be tokenized being suited this
+way for blockchain/DLT technologies business models;
+in addition, since
+atmospheric spectrum can be considered a public
+asset, it's managed in last terms by nations' governments
+and it's licensing and management should feature
+a high level of transparency and at the same time
+allow for efficiency and fair-competition making it
+feasible to model on public blockchain systems.
 
-Blockchain es una lista de registros en continuo crecimiento llamados bloques. Están enlazados y asegurados mediante criptografía. Adopta el protocolo P2P (\textit{peer-to-peer}) que puede tolerar un único punto de fallo. El mecanismo de consenso asegura un orden común e inequívoco de las transacciones y bloques, y garantiza la integridad y consistencia de la cadena de bloques a través de nodos distribuidos geográficamente. Por su diseño, la cadena de bloques tiene características tales como: descentralización, integridad y auditabilidad. La cadena de bloques puede servir como un nuevo tipo de conector de software, que debería considerarse como una posible alternativa descentralizada al almacenamiento de datos compartido centralizado existente.
+\vspace{0.35cm}
 
-Además, en función de los diferentes niveles de permiso de acceso, las cadenas de bloques pueden dividirse en dos tipos: 1) pública (tales como Bitcoin y Ethereum); y 2) privada (tal y como Hyperledger). Blockchain sirve como plataforma para los contratos inteligentes (en adelante, \textit{smart contracts}). Por ejemplo, programados en lenguaje Solidity de Ethereum, se alojen y ejecuten. Blockchain es un concepto de tecnología de libro mayor distribuido DLT (\textit{distributed ledger technology}). Se puede integrar en múltiples áreas de negocio.
+Taking this into account, lead the authors' to develop
+a first bottom-up proof of concept of a simple system
+demonstrating how can a wireless WiFi hotspot
+deployed on a commodity hardware asset\cite{RaspberryPi19}
+be managed to allow users to access the internet
+paying in exchange for Ethereum on a public network.
 
-\subsection{Trabajos similares encontrados} \label{ch:similar}
-En la literatura se recogen trabajos similares realizados para la compartición de la banda ancha del espectro radioeléctrico en redes Wi-Fi.
+\vspace{0.35cm}
 
-Algunos son éstos:
-\subsubsection{Fon} \label{ch:fon}
-Surge en el año 2005 con el objetivo de crear una comunidad Wi-Fi global, que permita a sus usuarios la conexión gratuita a los puntos de acceso de otros usuarios. Del mismo modo, brinda acceso de pago a terceros mediante un sistema en el que las ganancias se reparten entre Fon y el
-usuario que presta su conexión. El sistema facilita medios de pago electrónicos (no Blockchain) a estos no usuarios. Han desarrollado y puesto a la venta sus propios routers a los que llama Fonera (véase figura 1).
+One of the first intiatives to create
+a bandwidth reselling market was La Fonera\cite{fon}
+back in 2006. Main goal of the initiative was
+to allow ADSL users to share unused bandwidth using
+a specific WiFi hotspot deployed on an ad-hoc
+built router.
+
 \begin{center}
-%\begin{figure}[h]
-%  \centering
   \includegraphics[keepaspectratio, width=0.2\textwidth]{images/lafonera-sourcewikipedia.eps}
-%  \caption{Figura 1. La Fonera}
-%\end{figure}
-\\
-Figura 1. La Fonera. Fuente: Wikipedia.
-\\
+  \\
+  Figure 1. \textit{La Fonera's initial project router.}
 \end{center}
-\subsubsection{Hotspot me de Hackathon ETH Berlín Zwei} \label{ch:ethberlinzwei}
-En el año 2019 durante esta hackathon de los días 23-25 de Agosto resultó ganadora una aplicación que permite a un local proporcionar su punto de acceso de forma anónima mediante DAI (una criptomoneda) [ETHBerlínZwei 19].
-\section{Solución propuesta}\label{sec:solution}
-La solución basada en \DH App propuesta se describe a continuación:
-\subsection{Diseño} \label{ch:design}
-(Por completar)
-\subsubsection{Roles} \label{ch:roles}
-(Por completar)
-\\
-\\
-\textit{ETH-Paid hotspot provider} (E-Php).
-\\
-\\
-\textit{Hotspot handler} (hh).
-\\
-\\
-\textit{Upstream Internet Service Provider} (U-ISP).
-\\
-\\
-Usuario.
-\subsubsection{Arquitectura} \label{ch:architecture}
-(Por completar)
-\\
-\\
-Gestión del stake.
-\subsection{Implementación} \label{ch:implementation}
-El estudio del equipamiento a utilizar es importante en cualquier proyecto. En esta sección se hará una breve introducción de los principales componentes con los que se ha trabajado. También se indicará cómo se debe preparar la prueba de concepto (en adelante, PoC).
-\subsubsection{Front-end} \label{ch:front-end}
-(Por completar)
-\subsubsection{Back-end} \label{ch:back-end}
-(Por completar)
-\\
-\\
-Raspberry Pi.
-\\
-\\
-Se ha utilizado la Raspberry Pi 3 Modelo B (véase figura 2). Un ordenador de placa reducida SBC (\textit{single board computer}).
+
+\vspace{0.35cm}
+
+A more recent project like Hotspot Me\cite{hotspotme}
+and also very aligned with the technological demonstration
+described in this document consist on using mobile
+APIs to allow a users to share WiFi hotspot tethering
+to users nearby in exchange for ETH supported by a
+micro-payment channel contract.
+
+
+\section{Technological background}\label{ch:bc}
+
+\vspace{0.35cm}
+
+Blockchain technologies support a ledger of records in
+continuous growth called blocks.
+They are linked and secured by
+cryptography. Adopt the P2P protocol
+(\textit{peer-to-peer}) in order to be distributed
+with not a single point of failure.
+
+\vspace{0.35cm}
+
+The consensus mechanism ensures a common order
+of unambiguous transactions and
+blocks, and guarantees integrity and
+blockchain consistency a
+through geographically distributed nodes.
+By its design, the blockchain has characteristics
+such as: decentralization, integrity and auditability.
+The blockchain can serve as a new
+type of software connector, which should be considered
+as a possible decentralized alternative to storage
+of existing centralized shared data.
+
+\vspace{0.35cm}
+
+In addition, depending on the different levels of
+access permission, block chains can
+split into two types:
+1) public (such as Bitcoin and Ethereum); Y
+2) private (such as Hyperledger). Blockchain serves
+as a platform for smart contracts
+(hereinafter, \ textit {smart contracts}).
+For example, programmed in the Solidity language of
+Ethereum, stay and run.
+Blockchain is a technology concept
+DLT distributed ledger
+(\ textit {distributed ledger technology}).
+It can be integrated into multiple business areas.
+
+%% \textit{ETH-Paid hotspot provider} (E-Php).
+%% \\
+%% \\
+%% \textit{Hotspot handler} (hh).
+%% \\
+%% \\
+%% \textit{Upstream Internet Service Provider} (U-ISP).
+%% \\
+
+\section{Technological Proof of Concept description}
+
+\subsection{Architecture}
+\label{ch:architecture}
+\vspace{0.35cm}
+
+In order to support the PoC a
+Raspberry Pi 3 Model B (see figure 2) has been used
+as a single board computer to provide a WiFi access point using
+hostapd\cite{hostapd} daemon over Raspberry's WiFi chipset.
+Raspberry Pi was also connected using ethernet cable
+to an optical fiber commercial router.
+
+\vspace{0.35cm}
+
+As dynamic host configuration server for the wireless
+network, dnsmasq was used.
+
+\vspace{0.35cm}
+
+iptables\cite{iptables} was used as a firewall running
+inside the Raspberry; by default, it was configured to
+drop all packet
+forwarding traffic from users connected to the wireless
+domain and at the same time to redirect all
+forwarding traffic to Raspberry's HTTP port where a
+captive portal was deployed.
+
+
+
 \begin{center}
 %\begin{figure}[h]
 %  \centering
@@ -194,9 +282,10 @@ Se ha utilizado la Raspberry Pi 3 Modelo B (véase figura 2). Un ordenador de pl
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
-Figura 2. Raspberry Pi 3 Modelo B. Fuente: [RaspberryPi 19]
+Figure 2. Raspberry Pi 3 Model B. Source: \cite{RaspberryPi3}
 \\
 \end{center}
+
 Un resumen de sus especificaciones se da a continuación (véase tabla 1):
 \begin{center}
 %\begin{tabular} to 0.5\textwidth { | X[l] | X[r] | }
@@ -219,26 +308,23 @@ Un resumen de sus especificaciones se da a continuación (véase tabla 1):
 \end{center}
 Tabla 1. Especificaciones de Raspberry Pi 3 Modelo B
 %\newline
-\\
-\\
 Aunque no se indica expresamente si es hardware libre (\textit{open hardware}) o con derechos de marca, en su página Web oficial explican que disponen de contratos de distribución y venta con dos empresas. Pero al mismo tiempo, cualquiera puede convertirse en revendedor o redistribuidor de las tarjetas Raspberry Pi [RaspberryPiBuy 19].
-\\
-\\
-Smart contracts.
-\\
-\\
-La parte smart contract consiste en un smart contract para pago con ETH y otro smart contract para pago con tokens.
-\begin{itemize}
- \item Smart contract ETH
- \item Smart contract token
- \newline
-\end{itemize}
-(Por completar)
-\section{Pruebas}\label{sec:proofs}
+
+\vspace{0.35cm}
+
+\subsubsection{Smart contract}
+\subsubsection{Front-end} \label{ch:front-end}
+\subsubsection{Back-end} \label{ch:back-end}
+
+\subsection{Implementation} \label{ch:implementation}
+
+
+\section{Quality considerations}\label{sec:proofs}
 Para validar la PoC, se ha definido una batería de tests. Por ejemplo, dado que los smart contract normalmente manejan dinero, es esencial asegurarse de que su número de fallos y vulnerabilidades sea bajo [Hegedus 18]. Para ayudar a los desarrolladores y hacer más madura la tecnología, necesitamos herramientas de análisis [ConsenSys 19].
-\subsection{Tests} \label{ch:tests}
+\subsection{Automated tests} \label{ch:tests}
 (Por completar)
-\section{Despliegue}\label{sec:deploy}
+
+\section{Deployment}\label{sec:deploy}
 Docker es una herramienta que permite desplegar aplicaciones dentro de contenedores de software. Esto puede ser útil para la Raspberry Pi porque permite a los usuarios ejecutar aplicaciones con muy poca sobrecarga, siempre y cuando la aplicación esté empaquetada dentro de una imagen Docker. Simplemente instalamos Docker y ejecutamos el contenedor sobre Raspbian/ARM. Éste despliega el proyecto realizado.
 
 La secuencia de comandos a ejecutar es:
@@ -257,10 +343,17 @@ La secuencia de comandos a ejecutar es:
 \subsection{Legislación} \label{ch:legislation}
 (Por completar)
 \section{Conclusiones}\label{sec:conclusions}
-El mundo en el que vivimos es interconectado. En él Internet juega un papel fundamental. Se ha contribuido a la construcción de una PoC. Ésta se ha basado en la medida de lo posible en hardware libre (Raspberry Pi) ya que goza de buena popularidad para el desarrollo de prototipos.
-\\
-\\
-Como debilidad del pago con ETH, se puede achacar la volatilidad de su precio (véase figura 3). Esto conlleva variaciones en las comisiones (\textit{fees}) de una transacción Ethereum.
+El mundo en el que vivimos es interconectado.
+En él Internet juega un papel fundamental.
+Se ha contribuido a la construcción de
+una PoC. Ésta se ha basado en la medida de
+lo posible en hardware libre
+(Raspberry Pi) ya que goza de buena popularidad
+para el desarrollo de prototipos.
+Como debilidad del pago con ETH, se puede
+achacar la volatilidad de su precio (véase figura 3).
+Esto conlleva variaciones en
+las comisiones (\textit{fees}) de una transacción Ethereum.
 \begin{center}
 %\begin{figure}[h]
 %  \centering
@@ -306,6 +399,23 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \url{https://github.com/ethereum-internet-access}
 \newline
 \begin{thebibliography}{9}
+\bibitem{spectrumnh}
+  \href{https://uk5g.org/media/uploads/resource_files/Spectrum\_NH\_discussion\_paper\_20Feb19.pdf}{5G Spectrum and Neutral Hosting}, Discussion paper, February 2019,
+  DCMS Phase 1 5G Testbeds \& Trials Programme
+\bibitem{5g} \href{https://en.wikipedia.org/wiki/5G}{https://en.wikipedia.org/wiki/5G}
+\bibitem{sdns} Ian F. Akyildiz and Shih-Chun Lin and Pu Wang,
+  \textit{Wireless software-defined networks (W-SDNs) and network function virtualization (NFV) for 5G cellular systems:
+    An overview and qualitative evaluation}, Computer Networks, 93, 2015
+\bibitem{nfv} Jose Ordonez-Lucena et al.
+  \textit{Network Slicing for 5G with SDN/NFV: Concepts, Architectures, and Challenges},
+   IEEE Communications Magazine ( Volume: 55 , Issue: 5 , May 2017 )
+\bibitem{fon} \href{https://es.wikipedia.org/wiki/La_Fonera}{https://es.wikipedia.org/wiki/La\_Fonera}
+\bibitem{hotspotme} \href{https://devpost.com/software/hotspot-me}{https://devpost.com/software/hotspot-me}
+\bibitem{hostapd} \href{https://w1.fi/hostapd/}{https://w1.fi/hostapd/}
+\bibitem{iptables} \href{https://linux.die.net/man/8/iptables}{https://linux.die.net/man/8/iptables}
+\bibitem{dnsmasq} \href{https://en.wikipedia.org/wiki/Dnsmasq}{https://en.wikipedia.org/wiki/Dnsmasq}
+
+
 \bibitem{Coinbase19} Coinbase. Intercambio de moneda digital \href{https://www.coinbase.com/price/ethereum}{https://www.coinbase.com/price/ethereum}
 \bibitem{ConsenSys19} Ethereum Smart Contract Best Practices. Security tools. ConsenSys. 12 Agosto 2019.
 \bibitem{Docker19} Docker Documentation. How nodes work. 6 Septiembre 2019.  \href{https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/}{https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/}
