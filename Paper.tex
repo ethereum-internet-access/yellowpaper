@@ -114,7 +114,7 @@
     the architecture, implementation and
     security considerations;
     after that it is described a more
-    general approach on using blockchain technologies
+    general approach about using blockchain technologies
     and state channels in particular to provide
     mechanisms to reduce advanced wireless
     (i. e. 5G) services market friction between neutral host
@@ -267,11 +267,40 @@ to an optical fiber commercial router (\textit{see figure 2}).
 %  \centering
   \includegraphics[keepaspectratio, width=0.5\textwidth]{images/physical-setup-y.eps}
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
-%\end{figure}
+  %\end{figure}
 \\
 Figure 2. Physical Setup.
 \\
+
+\vspace{0.35cm}
+
+% \begin{tabular} to 0.5\textwidth { | X[l] | X[r] | }
+\begin{tabular}{ | m{0.125\textwidth} | m{0.3125\textwidth} | }
+ \hline
+ Specs & Raspberry Pi 3 Model B \\
+ \hline
+ CPU & Broadcom BCM2837, Cortex-A53 (ARMv8) 64-bit SoC @ 1,2 GHz \\
+\hline
+ RAM & 1 GB \\
+\hline
+ Connectivity & Wi-Fi 802.11 b/g/n (2,4 GHz) Bluetooth 4.1 Ethernet card up to 100 Mbps \\
+\hline
+ Ports & Full HDMI, 4 USB 2.0, MicroSD, CSI camera, DSI display \\
+\hline
+ Memory & MicroSD \\
+\hline
+\end{tabular}
 \end{center}
+\vspace{0.15cm}
+Table 1. Raspberry Pi 3 Model B specs
+Although it is not expressly indicated if it is free hardware
+(\textit{open hardware}) or with trademark rights, on the
+official website there's an explanation regarding
+that Raspberry have distribution and sales contracts with
+two companies and guarantee that anyone can become a reseller or
+redistributor of Raspberry Pi cards [RaspberryPiBuy 19].
+
+
 
 \vspace{0.35cm}
 
@@ -296,6 +325,23 @@ communicates with a back-end that controls iptables
 rules and also an Infura light proxy able to relay RPC
 calls arriving on 8545 port of the Raspberry.
 
+\vspace{0.35cm}
+
+The connection flow as shown in figure 3, can be summarized
+as follows:
+
+\begin{itemize}
+\item[] 1) The user associates the laptop with the WiFi hotspot.
+\item[] 2) Once connected is redirected to the captive portal front-end.
+\item[] 3) Front provisions MetaMask as Web3 provider.
+\item[] 4) Front-end uses MetaMaskto allow the user
+  to send value to the contract
+\item[] 5-6) Signed transaction is relayed through a light Infura proxy listening
+  on port 8545.
+\item[] 7) Once transaction is confirmed, the back-end iptables controller
+  start forwarding user's traffic.
+\end{itemize}
+
 \begin{center}
 %\begin{figure}[h]
 %  \centering
@@ -303,7 +349,18 @@ calls arriving on 8545 port of the Raspberry.
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
-Figure 3. Physical Setup.
+Figure 3. Connection work-flow.
+\\
+\end{center}
+
+\begin{center}
+%\begin{figure}[h]
+%  \centering
+  \includegraphics[keepaspectratio, width=0.2\textwidth]{images/rpi3modelb-sourceamazon.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 2. Raspberry Pi 3 Model B.
 \\
 \end{center}
 
@@ -373,29 +430,7 @@ the spectrum licensing to the citizen.
 \end{center}
 \begin{multicols}{2}
 
-%% Un resumen de sus especificaciones se da a continuación (véase tabla 1):
-%% \begin{center}
-%% %\begin{tabular} to 0.5\textwidth { | X[l] | X[r] | }
-%% \begin{tabular}{ | m{0.125\textwidth} | m{0.3125\textwidth} | }
-%%  \hline
-%%  Especificaciones & Raspberry Pi 3 Modelo B \\
-%%  \hline
-%%  Procesador & Broadcom BCM2837, Cortex-A53 (ARMv8) 64-bit SoC @ 1,2 GHz \\
-%% \hline
-%%  RAM & 1 GB \\
-%% \hline
-%%  Conectividad & Wi-Fi 802.11 b/g/n (2,4 GHz) Bluetooth 4.1 Puerto Ethernet de hasta 100 Mbps \\
-%% \hline
-%%  Puertos & HDMI completo, 4 USB 2.0, MicroSD, CSI camera, DSI display \\
-%% \hline
-%%  Memoria & MicroSD \\
-%% \hline
-%% \end{tabular}
-%% \newline
-%% \end{center}
-%% Tabla 1. Especificaciones de Raspberry Pi 3 Modelo B
-%% %\newline
-%% Aunque no se indica expresamente si es hardware libre (\textit{open hardware}) o con derechos de marca, en su página Web oficial explican que disponen de contratos de distribución y venta con dos empresas. Pero al mismo tiempo, cualquiera puede convertirse en revendedor o redistribuidor de las tarjetas Raspberry Pi [RaspberryPiBuy 19].
+
 
 \vspace{0.35cm}
 
