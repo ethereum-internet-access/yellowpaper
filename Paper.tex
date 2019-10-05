@@ -51,7 +51,7 @@
 \usepackage{footnote}
 \usepackage{caption}
 \definecolor{Orange}{rgb}{0.241,0.349,0.090}
-\usepackage{bbding}
+% \usepackage{bbding}
 \usepackage{shortvrb}
 %% \usepackage{draftwatermark}
 %% \SetWatermarkText{Esborrany}
@@ -119,10 +119,10 @@
     mechanisms to reduce advanced wireless
     (i. e. 5G) services market friction between neutral host
     providers, virtual operators and operators
-    licensing spectrum bands to nations' governments;
+    purchasing licenses of spectrum bands to nations' governments;
     guarantee transparency to consumers,
     and provide a fully GDPR compliant
-    schema using a self-sovereign identity system.
+    schema relying on a self-sovereign identity system.
   \end{center}
 \end{abstract}
 
@@ -237,6 +237,25 @@ DLT distributed ledger
 (\ textit {distributed ledger technology}).
 It can be integrated into multiple business areas.
 
+
+Ethereum
+blockchain is proposed as a first optimal candidate platform
+to support this project PoC attending to
+following reasons:
+
+\begin{itemize}
+\item Is the most used and mature 
+turing-complete-programmable blockchain technology.
+\item Support for high quality and audited 
+libraries in Solidity (most used smart contract language in Ethereum).
+\item Developments on Ethereum can be deployed 
+over public (main or testnets) or private/permissioned networks.
+\item Unlike Bitcoin, Ethereum supports miner fees using gas
+instead of directly ETH; this can mitigate the effects of
+volatile crypto-currency price by adjusting gas price depending
+on ETH value.
+\end{itemize}
+
 %% \textit{ETH-Paid hotspot provider} (E-Php).
 %% \\
 %% \\
@@ -246,7 +265,9 @@ It can be integrated into multiple business areas.
 %% \textit{Upstream Internet Service Provider} (U-ISP).
 %% \\
 
-\section{Technological Proof of Concept description}
+
+
+\section{Proof of Concept description}
 
 \subsection{Architecture}
 \label{ch:architecture}
@@ -300,8 +321,6 @@ that Raspberry have distribution and sales contracts with
 two companies and guarantee that anyone can become a reseller or
 redistributor of Raspberry Pi cards [RaspberryPiBuy 19].
 
-
-
 \vspace{0.35cm}
 
 Dnsmasq\cite{dnsmasq} was used
@@ -315,6 +334,9 @@ forwarding traffic from users connected to the wireless
 domain and at the same time to redirect all
 traffic to Raspberry's HTTP port where a
 captive portal was listening incoming connections.
+
+
+\subsection{General work-flow}
 
 \vspace{0.35cm}
 
@@ -335,7 +357,8 @@ as follows:
 \item[] 2) Once connected is redirected to the captive portal front-end.
 \item[] 3) Front provisions MetaMask as Web3 provider.
 \item[] 4) Front-end uses MetaMaskto allow the user
-  to send value to the contract
+  to send value to the contract opening a \textit{state channel} 
+(\textit{see section below}).
 \item[] 5-6) Signed transaction is relayed through a light Infura proxy listening
   on port 8545.
 \item[] 7) Once transaction is confirmed, the back-end iptables controller
@@ -370,6 +393,37 @@ Figure 2. Raspberry Pi 3 Model B.
 
 
 \section{Further steps}
+
+\vspace{0.35cm}
+
+In the recent years blockchain technologies
+and in particular smart contracts have made possible
+an innovative way to rule business and
+workflows between organizations.
+
+\vspace{0.35cm}
+
+One of the main application of smart contracts
+consist on modeling a scarce resource representing
+it using fungible (or not) tokens; in addition
+to this, smart contracts can be programmed
+to suit any possible business intelligence
+according to rules well known and accepted
+in advance by the parties transacting.
+
+\vspace{0.35cm}
+
+In the case of 5G technologies and due to the
+requirement that different operators shall be able
+to dynamically share the same resources (i.e. neutral host
+infrastructure). At the same time in order to manage
+service operation efficiently through its whole
+life-cycle there's the need to automate as much as
+possible all the operations; this requirements
+perfectly fit smart contract capabilities, in order
+to model and operate over a defined set of rules
+supporting payments, escrows, rewards or penalties
+depending on different conditions.
 
 \end{multicols}
 \begin{center}
@@ -438,7 +492,7 @@ the spectrum licensing to the citizen.
 \subsubsection{Front-end} \label{ch:front-end}
 \subsubsection{Back-end} \label{ch:back-end}
 
-\subsection{Implementation} \label{ch:implementation}
+% \subsection{Implementation} \label{ch:implementation}
 
 
 \section{Quality considerations}\label{sec:proofs}
