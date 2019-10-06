@@ -1,5 +1,6 @@
 Paper.pdf: Paper.tex
 	pslatex Paper.tex
+	pslatex Paper.tex
 	dvips Paper.dvi
 	ps2pdf Paper.ps
 
