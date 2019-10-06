@@ -392,7 +392,64 @@ Figure 4. Raspberry Pi 3 Model B.
 This section includes a detailed rationale software description of all
 the components and subcomponents.
 
+\subsubsection{Smart contract}
 
+\vspace{0.35cm}
+
+The smart contract\cite{state-channel-contract-a} used
+to implement the proof of concept consists on a simple
+uni-directional micro-payment channel that is Ownable
+depending on OpenZeppelin contract; uses also OpenZeppelin's
+SafeMath library in order to perform accounting operations
+and finally uses also OpenZeppelin's ECDSA library to support
+the signature validation on the closing channel operation.
+
+\vspace{0.35cm}
+
+Main data stucture of the contract described below:
+
+\vspace{0.35cm}
+
+\paragraph{ChannelData} Includes payer ethereum address,
+its state channel ephemeral address, deposit amount, opening time
+and a boolean representing the open/close status of the channel.
+
+\vspace{0.35cm}
+
+Contract's storage variables:
+
+\vspace{0.35cm}
+
+\paragraph{channelCount} uint256 variable that increments
+in a unit every time a user opens a channel. This operation
+does not rely on SafeMath since it's virtually impossible to
+overflow a uint256 storage record.
+
+\vspace{0.35cm}
+
+\paragraph{channelMapping} Holding a key-value map between
+channelCount values and channelData structures.
+
+\vspace{0.35cm}
+
+\paragraph{pricePerSecond} Constant keeping track of
+service price per second.
+
+\vspace{0.35cm}
+
+The main methods of the smart contract:
+
+\vspace{0.35cm}
+
+\paragraph{openChannel} receives as parameters, the ephemeral address
+of the user and also the purchased service value.
+
+\vspace{0.35cm}
+
+\paragraph{closeChannel}
+
+
+\vspace{0.35cm}
 
 \section{Quality considerations}\label{sec:proofs}
 
@@ -774,6 +831,14 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \bibitem{iptables} \href{https://linux.die.net/man/8/iptables}{https://linux.die.net/man/8/iptables}
 \bibitem{dnsmasq} \href{https://en.wikipedia.org/wiki/Dnsmasq}{https://en.wikipedia.org/wiki/Dnsmasq}
 \bibitem{osmc} \href{https://osmc.tv/}{https://osmc.tv/}
+
+\bibitem{state-channel-contract-a}
+  \href{state-channel-contract-a on GitHub}{https://github.com/ethereum-internet-access/state-channel-contract-a}
+\bibitem{etherwall}
+  \href{etherwall on GitHub}{https://github.com/ethereum-internet-access/etherwall}
+\bibitem{etherdoor}
+  \href{etherdoor on GitHub}{https://github.com/ethereum-internet-access/etherdoor}
+
 \bibitem{5gcity} \href{https://www.5gcity.eu/}{https://www.5gcity.eu/}
 \bibitem{allen}  \href{Christopher Allen, The path to self sovereign identity, 2016}
   {http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html}
