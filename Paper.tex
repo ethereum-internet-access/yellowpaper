@@ -156,8 +156,8 @@ be tokenized being suited this
 way for blockchain/DLT technologies business models;
 in addition, since
 atmospheric spectrum can be considered a public
-asset, it's managed in last terms by nations' governments
-and it's licensing and management should feature
+asset, it's managed at the end by nations' governments
+and its licensing and management should feature
 a high level of transparency and at the same time
 allow for efficiency and fair-competition making it
 feasible to model on public blockchain systems.
@@ -244,11 +244,11 @@ to support this project PoC attending to
 following reasons:
 
 \begin{itemize}
-\item Is the most used and mature 
+\item Is the most used and mature
 turing-complete-programmable blockchain technology.
-\item Support for high quality and audited 
+\item Support for high quality and audited
 libraries in Solidity (most used smart contract language in Ethereum).
-\item Developments on Ethereum can be deployed 
+\item Developments on Ethereum can be deployed
 over public (main or testnets) or private/permissioned networks.
 \item Unlike Bitcoin, Ethereum supports miner fees using gas
 instead of directly ETH; this can mitigate the effects of
@@ -264,8 +264,6 @@ on ETH value.
 %% \\
 %% \textit{Upstream Internet Service Provider} (U-ISP).
 %% \\
-
-
 
 \section{Proof of Concept description}
 
@@ -357,7 +355,7 @@ as follows:
 \item[] 2) Once connected is redirected to the captive portal front-end.
 \item[] 3) Front provisions MetaMask as Web3 provider.
 \item[] 4) Front-end uses MetaMaskto allow the user
-  to send value to the contract opening a \textit{state channel} 
+  to send value to the contract opening a \textit{state channel}
 (\textit{see section below}).
 \item[] 5-6) Signed transaction is relayed through a light Infura proxy listening
   on port 8545.
@@ -383,10 +381,94 @@ Figure 3. Connection work-flow.
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
-Figure 2. Raspberry Pi 3 Model B.
+Figure 4. Raspberry Pi 3 Model B.
 \\
 \end{center}
 
+\subsection{Detailed software description}
+
+\vspace{0.35cm}
+
+This section includes a detailed rationale software description of all
+the components and subcomponents.
+
+
+
+\section{Quality considerations}\label{sec:proofs}
+
+\vspace{0.35cm}
+
+To validate the PoC, a battery of tests has been defined. For example, given
+that smart contract normally handle money, it is essential to ensure that
+its number of failures and vulnerabilities is low [Hegedus 18].
+To help developers and make technology more mature,
+we need analysis tools [ConsenSys 19].
+
+\vspace{0.35cm}
+
+For this project, we used Mythril from ConsenSys. Mythril is a
+security analysis tool for EVM (Ethereum Virtual Machine) bytecode.
+It detects security vulnerabilities in smart contracts built for Ethereum.
+
+\vspace{0.35cm}
+
+We analysed the Solidity-based smart contract called
+StateChannel.sol (of this project).
+
+The installation steps are as follows in:
+
+https://github.com/ethereum-internet-access/mythril
+Firstly, we analysed the local source code:
+
+\begin{verbatim}
+$ cd contracts
+$ myth analyze StateChannel.sol \
+  > ./security-report
+$ cat ./security-report
+\end{verbatim}
+
+\vspace{0.35cm}
+
+Secondly, we analysed on-chain smart contract.
+Because the smart contract was deployed on Ropsten testnet we executed:
+
+\begin{verbatim}
+$ myth analyze --rpc \
+  infura-ropsten -a \
+  contract_address \
+  > ./security-report
+$ cat ./security-report
+\end{verbatim}
+
+
+\section{Deployment}\label{sec:deploy}
+
+\vspace{0.35cm}
+
+Docker is a tool that allows you to deploy applications
+inside of software containers. This can be useful for our
+Raspberry Pi because it allows users to run applications with
+very little overhead, as long as the application
+is packaged inside of a Docker image.
+
+\vspace{0.35cm}
+
+We simply install Docker and run the container over Raspbian/ARM.
+It would deploy the done project. The script to execute is as follows:
+
+\begin{verbatim}
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install curl
+$ curl -sSL https://get.docker.com | sh
+$ sudo apt-get install git
+$ git clone \
+  https://github.com/ \
+  ethereum-internet-access/docker.git
+$ cd docker
+$ sh ./install-project\
+  -inside-docker-container.sh
+\end{verbatim}
 
 
 
@@ -394,12 +476,13 @@ Figure 2. Raspberry Pi 3 Model B.
 
 \section{Further steps}
 
+\subsection{5G Technologies and scarcity model}
 \vspace{0.35cm}
 
 In the recent years blockchain technologies
 and in particular smart contracts have made possible
 an innovative way to rule business and
-workflows between organizations.
+processes between organizations.
 
 \vspace{0.35cm}
 
@@ -413,8 +496,9 @@ in advance by the parties transacting.
 
 \vspace{0.35cm}
 
-In the case of 5G technologies and due to the
-requirement that different operators shall be able
+In the case of 5G technologies for practical reasons
+and the high density of antennas required,
+different operators shall be able
 to dynamically share the same resources (i.e. neutral host
 infrastructure). At the same time in order to manage
 service operation efficiently through its whole
@@ -429,31 +513,117 @@ depending on different conditions.
 \begin{center}
 %\begin{figure}[h]
   %  \centering
+  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/slices-y.eps}
+%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
+%\end{figure}
+\\
+Figure 5. Slicing model.
+\\
+\end{center}
+\begin{multicols}{2}
+
+As an example, in figure 5 it's shown how three virtual operators over
+different infrastructures shared or not in a slice-model of a neutral host
+infrastructure; a slice can be described as a dynamic virtualization
+allowing multitenancy of some physical resources like access points,
+physical switches and datacenters including mobile edge computing
+appliances; this is the case of currently in execution projects like
+5GCity\cite{5gcity} where a distributed cloud
+and radio platform for municipalities and infrastructure owners acting
+as 5G neutral hosts is being developed and tested. Platforms
+targeting 5G business models such as 5GCity can benefit from adding
+this smart contract business logic in order to bill end-users and automate
+all the accounting part.
+
+\subsection{Know your customer issue}
+
+\vspace{0.35cm}
+
+Although this is a promising approach; there's an issue with it regarding
+regulation, in particular in the European Union, there's the requirement
+that a telecommunication service provider must know their customers; this
+is required for example to allow judge requirements of users identity
+in case there's some evidence of illegal activities. As a single payment
+system, state channel smart contracts are pseudoanymous hence do not
+support the \textit{Know Your Customer - KyC} required by regulation.
+
+\vspace{0.35cm}
+
+To take into account the problem illustrated in previous paragraph
+we can take as a basis a model of self-sovereign identity\cite{allen}
+and in particular the one recently anounced by the authorities
+of Catalonia government\cite{identicat} that will provide credentials
+to citizens using DLT technologies as a Public Key Infrastructure; this
+model could allow in some near future to give the citizen the option
+of registering identity in such a way that the credential can be linked
+to some administration database that could be queried only by a judge
+requirement and guarantee the users identities are recognized
+
+
+
+\end{multicols}
+
+\begin{center}
+%\begin{figure}[h]
+  %  \centering
   \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/bc5g-y.eps}
   \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/bc5g2-y.eps}
 %  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
 %\end{figure}
 \\
-Figure 3. Anonymicity, identity, KyC and GDPR.
+Figure 6. Upper figure shows a scenario where different users connect
+to antennas controlled by a state channel smart contract like the one
+described in this thesis; users remain pseudoanonymous and hence, the
+schema is not regulation compliant regarding the KyC that a
+telecommunications
+operator should guarantee in case of legal issues. On the other hand,
+relying on a self-sovereign decentralized identity bottom figure shows
+up how the citizens can authenticate themselves to the system with the
+guarantee there's a public administration validating their identities.
 \\
 \end{center}
+
 \begin{multicols}{2}
+by a public administration; this way, the service provider (\textit{in
+  our case a telecommunications operator}) does not need to know
+anything about a customer appart from a public key and a valid
+credential signed by the administration. This schema could be a real game
+changer regarding operators competitivity since they get rid-off
+from several and costly processes that do not add any value to the service
+they provide:
+
+\begin{itemize}
+\item Fully automated accounting and billing layer.
+\item Regulation compliance without KyC on-boarding process.
+\item GDP compliance by default. Operator does not need to know
+  user's name, bank account, etc.
+\end{itemize}
+
+\subsection{Instant portability}
+
+\vspace{0.35cm}
+
+This approach to the way customers interact with telecommunication
+operators relying on a publicly recognized self-sovereign identity
+can support a new way of handling portability granting full customer
+empowerment when they want to switch from one operator to another;
+in figure 5, is represented a process on a user opens a channel
+in operator's A smart-contract; after that begins transacting with
+this first operator paying as they consume the access service
+sending micro-payments to the operator.
+
+\vspace{0.35cm}
+
+After that, user decides to switch to a second operator, opening a channel
+over operator B's contract; since operator B, stops receiving the signed
+micropayments, opts for closing the channel backdrawing the earnings in operator's
+account and return value for the user. Such kind of process can be accomplisehd
+in a matter of seconds for a few cents fee literally obliterating any
+operator lock-in mechanism thus supporting a really zero friction service market.
 
 \end{multicols}
-\begin{center}
-%\begin{figure}[h]
-  %  \centering
-  \includegraphics[keepaspectratio, width=0.8\textwidth]{images/bc5g/slices-y.eps}
-%  \caption{Figura 2. Raspberry Pi 3 Modelo B. Fuente: [Raspberry 18]}
-%\end{figure}
-\\
-Figure 4. Slicing model.
-\\
-\end{center}
-\begin{multicols}{2}
 
 
-\end{multicols}
 \begin{center}
 %\begin{figure}[h]
   %  \centering
@@ -468,6 +638,17 @@ between different operators with minimal fee.
 \\
 \end{center}
 \begin{multicols}{2}
+
+  \subsection{Towards telco market full tokenization}
+
+  \vspace{0.35cm}
+
+  This model can be extended without limits to the full wireless
+  telecommunication market tokenization; as depicted in figure 6,
+  from the spectrum auctioning, including infrastructure providers
+  virtualizing their appliances for virtual operators, end to users
+  service provision and accounting relying on a self-sovereign
+  identity system.
 
 
 \end{multicols}
@@ -485,7 +666,6 @@ the spectrum licensing to the citizen.
 \begin{multicols}{2}
 
 
-
 \vspace{0.35cm}
 
 \subsubsection{Smart contract}
@@ -495,41 +675,45 @@ the spectrum licensing to the citizen.
 % \subsection{Implementation} \label{ch:implementation}
 
 
-\section{Quality considerations}\label{sec:proofs}
-Para validar la PoC, se ha definido una batería de tests. Por ejemplo, dado que los smart contract normalmente manejan dinero, es esencial asegurarse de que su número de fallos y vulnerabilidades sea bajo [Hegedus 18]. Para ayudar a los desarrolladores y hacer más madura la tecnología, necesitamos herramientas de análisis [ConsenSys 19].
-\subsection{Automated tests} \label{ch:tests}
-(Por completar)
 
-\section{Deployment}\label{sec:deploy}
-Docker es una herramienta que permite desplegar aplicaciones dentro de contenedores de software. Esto puede ser útil para la Raspberry Pi porque permite a los usuarios ejecutar aplicaciones con muy poca sobrecarga, siempre y cuando la aplicación esté empaquetada dentro de una imagen Docker. Simplemente instalamos Docker y ejecutamos el contenedor sobre Raspbian/ARM. Éste despliega el proyecto realizado.
+%% \section{Viabilidad de negocio}\label{sec:business}
+%% (Por completar)
+%% Comento el tema viabilidad de negocio porque ya está discutida
+%% en Further steps
 
-La secuencia de comandos a ejecutar es:
-\\
-\begin{flushleft}
-\$ sudo apt-get install git
-\\
-\$ git clone https://github.com/ethereum-internet-access/docker.git
-\\
-\$ cd docker
-\\
-\$ sh ./install-project-inside-docker-container.sh
-\end{flushleft}
-\section{Viabilidad de negocio}\label{sec:business}
-(Por completar)
-\subsection{Legislación} \label{ch:legislation}
-(Por completar)
-\section{Conclusiones}\label{sec:conclusions}
-El mundo en el que vivimos es interconectado.
-En él Internet juega un papel fundamental.
-Se ha contribuido a la construcción de
-una PoC. Ésta se ha basado en la medida de
-lo posible en hardware libre
-(Raspberry Pi) ya que goza de buena popularidad
-para el desarrollo de prototipos.
-Como debilidad del pago con ETH, se puede
-achacar la volatilidad de su precio (véase figura 3).
-Esto conlleva variaciones en
-las comisiones (\textit{fees}) de una transacción Ethereum.
+\subsection{Regulation considerations} \label{ch:regulation}
+
+\vspace{0.35cm}
+
+TODO; talk about GDPR, telco KyC, european market regulation, etc.
+
+\section{Conclusions}\label{sec:conclusions}
+
+\vspace{0.35cm}
+
+World we live today is interconnected and wireless
+internet access has a foundamental role. In this project
+a Proof of Concept has been build. This PoC based in
+commodity free hardware asset (Raspberry Pi) can serve
+as an example of end-user wireless provision pay-as-you-go
+using a state channel Solidity smart contract; KyC issues
+and identity consideration have been discussed also leading
+to the conclusion that complementing this approach with
+what a self-sovereign identity can provide there's no need
+to a telecommunication operator to perform a KyC process
+in order to provision a service to a client.
+
+\vspace{0.35cm}
+
+One of the major problems with this approach has to do
+with ETH-fiat exchange volatility
+(\textit{see figure 7}), anyway, including
+a feature to regulate minute price in the state channel
+contract and taking into account gas prices can adjust
+in order to properly
+represent computation, bandwidth and storage costs this
+problem can be completely avoided.
+
 \begin{center}
 %\begin{figure}[h]
 %  \centering
@@ -537,16 +721,14 @@ las comisiones (\textit{fees}) de una transacción Ethereum.
 %  \caption{Figura 3. Variación cotización ETH (11/08/2019)}
 %\end{figure}
 \\
-Figura 3. Variación cotización ETH (11/08/2019). Fuente: [Coinbase 19]
+Figure 7. ETH Price chart (11/08/2019). Source: [Coinbase 19]
 \\
 \end{center}
-(Por completar)
-\section{Líneas futuras}\label{sec:future}
-Como líneas futuras y complemento a este trabajo, con más tiempo, se plantea:
-\subsection{Añadir forma de pago DAI} \label{ch:dai}
-DAI es una criptomoneda estable (\textit{stablecoin}) que funciona con ETH y que intenta mantener un valor de 1\$. A diferencia de los billetes de banco centralizados, DAI no está respaldado por dólares estadounidenses en una cuenta bancaria. En cambio, está respaldado por garantías en la plataforma Maker [MakerDAO 19].
-\subsection{Usar Raspberry Pi 4 Modelo B} \label{ch:rpi4modelb}
-Anunciado en Junio de 2019 y a la venta. Es un hardware que ofrece mejores prestaciones. Por ejemplo, el procesador es un Broadcom BCM2711. Un ARM Cortex-A72 de cuatro núcleos y a 1,5 GHz. Hasta tres veces más eficiente (\textit{benchmark}) que el modelo anterior (Raspberry Pi 3 Modelo B+). También da la posibilidad de elegir entre 1, 2 y 4 GB de RAM.
+
+%% \subsection{Añadir forma de pago DAI} \label{ch:dai}
+%% DAI es una criptomoneda estable (\textit{stablecoin}) que funciona con ETH y que intenta mantener un valor de 1\$. A diferencia de los billetes de banco centralizados, DAI no está respaldado por dólares estadounidenses en una cuenta bancaria. En cambio, está respaldado por garantías en la plataforma Maker [MakerDAO 19].
+%% \subsection{Usar Raspberry Pi 4 Modelo B} \label{ch:rpi4modelb}
+%% Anunciado en Junio de 2019 y a la venta. Es un hardware que ofrece mejores prestaciones. Por ejemplo, el procesador es un Broadcom BCM2711. Un ARM Cortex-A72 de cuatro núcleos y a 1,5 GHz. Hasta tres veces más eficiente (\textit{benchmark}) que el modelo anterior (Raspberry Pi 3 Modelo B+). También da la posibilidad de elegir entre 1, 2 y 4 GB de RAM.
 \subsection{Usar Docker Swarm} \label{ch:dockerswarm}
 Se podría presentar una aplicación descentralizada basada en microservicios. Por ejemplo en microservicios, un contenedor Docker (como en la sección 4) podría verse como un servicio. Entre las ventajas que aporta microservicios estarían:
 \begin{itemize}
@@ -569,6 +751,7 @@ Para ello, Docker ofrece un orquestador (de código abierto) llamado Docker Swar
 Figura 4. Diagrama Docker Swarm. Fuente: [Docker 19]
 \\
 \end{center}
+
 \section{Repositorio}\label{sec:repository}
 El código fuente generado en el proyecto está publicado en un repositorio público de GitHub bajo licencia MIT.
 \newline\newline
@@ -591,7 +774,11 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \bibitem{iptables} \href{https://linux.die.net/man/8/iptables}{https://linux.die.net/man/8/iptables}
 \bibitem{dnsmasq} \href{https://en.wikipedia.org/wiki/Dnsmasq}{https://en.wikipedia.org/wiki/Dnsmasq}
 \bibitem{osmc} \href{https://osmc.tv/}{https://osmc.tv/}
-
+\bibitem{5gcity} \href{https://www.5gcity.eu/}{https://www.5gcity.eu/}
+\bibitem{allen}  \href{Christopher Allen, The path to self sovereign identity, 2016}
+  {http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html}
+\bibitem{identicat}
+  \href{Catalonia to Build DLT-Based Identity, Coindesk, 2019}{https://www.coindesk.com/catalonia-government-to-build-dlt-based-identity-platform-for-citizens}
 
 
 \bibitem{Coinbase19} Coinbase. Intercambio de moneda digital \href{https://www.coinbase.com/price/ethereum}{https://www.coinbase.com/price/ethereum}
