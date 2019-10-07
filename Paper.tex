@@ -334,7 +334,7 @@ traffic to Raspberry's HTTP port where a
 captive portal was listening incoming connections.
 
 
-\subsection{General work-flow}
+\subsection{Main connection workflow}
 
 \vspace{0.35cm}
 
@@ -347,6 +347,20 @@ calls arriving on 8545 port of the Raspberry.
 
 \vspace{0.35cm}
 
+To keep users' freedom of interrupt the service consumption
+whenever they want and also avoid the overhead of transacting
+many times with the smart contract authors have implemented
+what is known as a state channel in a smart contract; this
+makes possible keep control of the time fraction of the service
+that's already consumed and at the same time cryptographically
+guarantee that the smart contract is going to unlock the funds
+when the provider desires to do so. State channels are a
+standard pattern in most blockchain applications and in all cases
+(\textit{independently of the complexity}) present three main
+steps: opening, transaction and closing; project's implementation
+described below:
+
+\subsubsection{Channel opening}
 The connection flow as shown in figure 3, can be summarized
 as follows:
 
@@ -355,13 +369,34 @@ as follows:
 \item[] 2) Once connected is redirected to the captive portal front-end.
 \item[] 3) Front provisions MetaMask as Web3 provider.
 \item[] 4) Front-end uses MetaMaskto allow the user
-  to send value to the contract opening a \textit{state channel}
-(\textit{see section below}).
+  to send value to the contract
 \item[] 5-6) Signed transaction is relayed through a light Infura proxy listening
   on port 8545.
 \item[] 7) Once transaction is confirmed, the back-end iptables controller
   start forwarding user's traffic.
 \end{itemize}
+
+
+\subsubsection{Channel transactions}
+Before sending the initial value transaction (\textit{in proportion with
+  the duration of the service}) user's front-end generates an ephemeral elliptic curve
+secp256k1 keypair and sends the public key to the contract to open the state channel.
+Corresponding ephemeral private key is the one that's going to be used
+to periodically (each 10 s approximately)
+produce increasing value signatures proportional to the
+service consumption ellapsed time. This signatures are being send to the
+backend instead of the blockchain; backend verifies and validates the
+signatures and stores the last one (\textit{the most valuable}).
+
+\subsubsection{Channel closing}
+At the end, when the connection time is exhausted or the backend
+stops receiving channel transactions for approximately 60 seconds,
+the backend sends the last seen transaction to the smart contract
+using the method \texttt{closeChannel}; this method, when called
+with a valid channel signature as parameter, unlocks user's original
+funds and transfer the signed amount to the contract owner
+(\textit{provider of the service}) and the corresponding return
+to the user.
 
 \begin{center}
 %\begin{figure}[h]
