@@ -132,6 +132,63 @@
 
 \newpage
 
+\vspace*{5cm}
+
+\begin{center}
+\Huge{\textbf{DISCLAMER}}
+\vspace{1cm}
+
+
+\Large
+All software described and linked in this document is open source
+under the MIT license; so anyone can freely use it and make
+modifications to the source code to fulfill their use
+cases. But if you do so, please take into account that the software
+at the time of this writing is merely
+a proof of concept and is not properly audited; although
+authors tried to follow best practices regarding smart contract,
+front-end and back-end design and implementation there are still
+some tradeoffs and recognizable security issues
+described in this document's
+security considerations section. Please take this into account
+when using and/or modifying this software and be conscious
+that authors do not provide any guarantee in case of
+security issues, economical loses or regulation infringement.
+\end{center}
+
+\vspace{1cm}
+
+\newpage
+
+\vspace*{5cm}
+
+\begin{verbatim}
+MIT License
+
+Copyright (c) 2019 ethereum-internet-access
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+\end{verbatim}
+
+
+\newpage
+
 \setlength{\columnsep}{20pt}
 \begin{multicols}{2}
 \section{Introduction}\label{sec:introduction}
@@ -226,17 +283,18 @@ of existing centralized shared data.
 In addition, depending on the different levels of
 access permission, block chains can
 split into two types:
-1) public (such as Bitcoin and Ethereum); Y
+1) public (such as Bitcoin and Ethereum); and
 2) private (such as Hyperledger). Blockchain serves
 as a platform for smart contracts
-(hereinafter, \ textit {smart contracts}).
+(hereinafter, \textit{smart contracts}).
 For example, programmed in the Solidity language of
 Ethereum, stay and run.
 Blockchain is a technology concept
 DLT distributed ledger
-(\ textit {distributed ledger technology}).
+(\textit{distributed ledger technology}).
 It can be integrated into multiple business areas.
 
+\vspace{0.35cm}
 
 Ethereum
 blockchain is proposed as a first optimal candidate platform
@@ -347,17 +405,17 @@ calls arriving on 8545 port of the Raspberry.
 
 \vspace{0.35cm}
 
-To keep users' freedom of interrupt the service consumption
+To keep users' freedom to interrupt the service consumption
 whenever they want and also avoid the overhead of transacting
-many times with the smart contract authors have implemented
+many times with the smart contract; authors have implemented
 what is known as a state channel in a smart contract; this
-makes possible keep control of the time fraction of the service
+makes possible to keep control of the time fraction of the service
 that's already consumed and at the same time cryptographically
 guarantee that the smart contract is going to unlock the funds
 when the provider desires to do so. State channels are a
 standard pattern in most blockchain applications and in all cases
 (\textit{independently of the complexity}) present three main
-steps: opening, transaction and closing; project's implementation
+steps: opening, transaction and closing; project's particular implementation
 described below:
 
 \subsubsection{Channel opening}
@@ -368,7 +426,7 @@ as follows:
 \item[] 1) The user associates the laptop with the WiFi hotspot.
 \item[] 2) Once connected is redirected to the captive portal front-end.
 \item[] 3) Front provisions MetaMask as Web3 provider.
-\item[] 4) Front-end uses MetaMaskto allow the user
+\item[] 4) Front-end uses MetaMask to allow the user
   to send value to the contract
 \item[] 5-6) Signed transaction is relayed through a light Infura proxy listening
   on port 8545.
@@ -378,8 +436,9 @@ as follows:
 
 
 \subsubsection{Channel transactions}
-Before sending the initial value transaction (\textit{in proportion with
-  the duration of the service}) user's front-end generates an ephemeral elliptic curve
+Before sending the initial value transaction (\textit{proportional to
+  the initially expected duration of the service})
+user's front-end generates an ephemeral elliptic curve
 secp256k1 keypair and sends the public key to the contract to open the state channel.
 Corresponding ephemeral private key is the one that's going to be used
 to periodically (each 10 s approximately)
@@ -445,7 +504,7 @@ Main data stucture of the contract described below:
 
 \vspace{0.35cm}
 
-\paragraph{ChannelData} Includes payer ethereum address,
+\paragraph{\texttt{ChannelData}} Includes payer ethereum address,
 its state channel ephemeral address, deposit amount, opening time
 and a boolean representing the open/close status of the channel.
 
@@ -455,19 +514,19 @@ Contract's storage variables:
 
 \vspace{0.35cm}
 
-\paragraph{channelCount} uint256 variable that increments
+\paragraph{\texttt{channelCount}} uint256 variable that increments
 in a unit every time a user opens a channel. This operation
 does not rely on SafeMath since it's virtually impossible to
 overflow a uint256 storage record.
 
 \vspace{0.35cm}
 
-\paragraph{channelMapping} Holding a key-value map between
+\paragraph{\texttt{channelMapping}} Holding a key-value map between
 channelCount values and channelData structures.
 
 \vspace{0.35cm}
 
-\paragraph{pricePerSecond} Constant keeping track of
+\paragraph{\texttt{pricePerSecond}} Constant keeping track of
 service price per second.
 
 \vspace{0.35cm}
@@ -476,13 +535,117 @@ The main methods of the smart contract:
 
 \vspace{0.35cm}
 
-\paragraph{openChannel} receives as parameters, the ephemeral address
+\paragraph{\texttt{openChannel}} receives as parameters, the ephemeral address
 of the user and also the purchased service value.
 
 \vspace{0.35cm}
 
-\paragraph{closeChannel}
+\paragraph{\texttt{closeChannel}} accepts the amount of ETH to refund
+to sender, the \texttt{channelId} and the \texttt{signature} of the
+payer; checks the signature and after updating the state, transfers
+the amount to the owner of the contract and the return to the channel
+opener.
 
+\vspace{0.35cm}
+
+
+\paragraph{\texttt{claimTimeout}} method that allows the payer to
+close the channel in case contract owner does not close it after
+some \texttt{expirationTime}.
+
+\subsubsection{Etherwall}
+
+\vspace{0.35cm}
+
+Consists on a NodeJS backend that fulfils three main system functions:
+
+\begin{itemize}
+\item Controls the state of the current connections.
+\item iptables interfacing.
+\item Micro-payment signature and amount validations.
+\end{itemize}
+
+On execution uses the module \texttt{lib/iptables.js}
+to setup and initialize system's iptables redirecting
+all 80 port traffic to the ip address to Raspberry's
+ip address; to do so, relyes on the node module \texttt{child\_process}
+to spawn system commands. Also redirects all traffic trying
+to reach 8545 port to itself the same way in order to
+redirect MetaMask's RCP calls to the lightweight infuraProxy\cite{infuraProxy}
+developed also for this project and contained in etherwall's root directory.
+
+\vspace{0.35cm}
+
+After initializing, the backend using the web framework\cite{express}
+etherwall exposes the following endpoints:
+
+\vspace{0.35cm}
+
+\paragraph{\texttt{GET /generate\_204}} As a way to enable
+captive portal detection to Android OS. HTTP Status 204
+means the file exists but, is empty.
+This lets Android know that the Internet is accessible.
+If the request receives HTTP Status 302 (temporary redirect)
+instead of HTTP 204, Android will follow the
+redirection URL to display the Captive Portal to the user.
+
+\vspace{0.35cm}
+
+\paragraph{\texttt{POST /mac}} Endpoint to request a new
+connection; mainly
+accepts the time left to use the service as a parameter
+and internally gets the MAC address of user's device
+making an arp table query based on client's ip address.
+After that invokes \texttt{lib/iptables.js} \texttt{grantAccess}
+function in order to insert a rule to enable packet forwarding
+for this particular MAC address on top of iptables.
+Also uses module \texttt{lib/connections.js} to keep persistence
+of the connection status. Once connected after posting
+\texttt{timeLeft} to this endpoint, in module
+\texttt{lib/connections.js} there's a \texttt{setInterval}
+triggering getting connection status and time since last
+micro-payment each 5 seconds. In case \texttt{timeSinceLastPayment}
+exceeds 60 seconds or \texttt{timeLeft} goes negative,
+disconnects the client deleting the forwarding rule from
+iptables.
+
+\vspace{0.35cm}
+
+\paragraph{\texttt{GET /mac}} Retrieves the status of client's
+connection from \texttt{lib/connections.js} module; this module
+in addition, provides some serialized persistence using a JSON
+file under the \texttt{data/} directory to keep state integrity
+between server restarts.
+
+\vspace{0.35cm}
+
+\paragraph{\texttt{POST /payment}} Endpoint that allows the front-end
+to send a payload containing a payload passing the corresponding
+contract data:
+
+\begin{itemize}
+\item \texttt{channelId}
+\item \texttt{amount} (to unlock)
+\item \texttt{signature}
+\end{itemize}
+
+In order to verify the correctness of the payload, uses Web3
+module to compute the \texttt{soliditySha3} and compares it
+to the signature's \texttt{messageHash}; after that recovers
+the public address from the signature and compares it to
+the associated smart contract mapping structure based on its
+\texttt{channelId}; if everything matches, it additionally checks
+that the unlocked amount is approximately what it corresponds
+taking into account connection ellapsed time
+(\textit{using a kind threshold of 60 seconds marginal cost});
+in case everything is correct, stores the payment together
+with a timestamp as the last one corresponding
+to the connection using again \texttt{lib/connections.js} module.
+This is done to allow bootstrapped \texttt{setInterval}
+on the previously described \texttt{POST mac/} to process
+the timeout business logic.
+
+\subsubsection{etherdoor}
 
 \vspace{0.35cm}
 
@@ -619,13 +782,13 @@ different infrastructures shared or not in a slice-model of a neutral host
 infrastructure; a slice can be described as a dynamic virtualization
 allowing multitenancy of some physical resources like access points,
 physical switches and datacenters including mobile edge computing
-appliances; this is the case of currently in execution projects like
+appliances; this is the case of currently ongoing projects like
 5GCity\cite{5gcity} where a distributed cloud
 and radio platform for municipalities and infrastructure owners acting
 as 5G neutral hosts is being developed and tested. Platforms
 targeting 5G business models such as 5GCity can benefit from adding
 this smart contract business logic in order to bill end-users and automate
-all the accounting part.
+all the accounting layer.
 
 \subsection{Know your customer issue}
 
@@ -644,7 +807,7 @@ support the \textit{Know Your Customer - KyC} required by regulation.
 To take into account the problem illustrated in previous paragraph
 we can take as a basis a model of self-sovereign identity\cite{allen}
 and in particular the one recently anounced by the authorities
-of Catalonia government\cite{identicat} that will provide credentials
+of Catalonian government\cite{identicat} that will provide credentials
 to citizens using DLT technologies as a Public Key Infrastructure; this
 model could allow in some near future to give the citizen the option
 of registering identity in such a way that the credential can be linked
@@ -687,7 +850,7 @@ they provide:
 \begin{itemize}
 \item Fully automated accounting and billing layer.
 \item Regulation compliance without KyC on-boarding process.
-\item GDP compliance by default. Operator does not need to know
+\item GDPR compliance by default. Operator does not need to know
   user's name, bank account, etc.
 \end{itemize}
 
@@ -735,7 +898,7 @@ between different operators with minimal fee.
 
   \vspace{0.35cm}
 
-  This model can be extended without limits to the full wireless
+  This model can be extended without limits towards a full wireless
   telecommunication market tokenization; as depicted in figure 6,
   from the spectrum auctioning, including infrastructure providers
   virtualizing their appliances for virtual operators, end to users
@@ -868,22 +1031,28 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
 \bibitem{osmc} \href{https://osmc.tv/}{https://osmc.tv/}
 
 \bibitem{state-channel-contract-a}
-  \href{state-channel-contract-a on GitHub}{https://github.com/ethereum-internet-access/state-channel-contract-a}
+  \href{https://github.com/ethereum-internet-access/state-channel-contract-a}{state-channel-contract-a on GitHub}
 \bibitem{etherwall}
-  \href{etherwall on GitHub}{https://github.com/ethereum-internet-access/etherwall}
+  \href{https://github.com/ethereum-internet-access/etherwall}{etherwall on GitHub}
+\bibitem{infuraProxy}
+  \href{https://github.com/ethereum-internet-access/etherwall/blob/master/infuraProxy.js}{infuraProxy on GitHub}
+
 \bibitem{etherdoor}
-  \href{etherdoor on GitHub}{https://github.com/ethereum-internet-access/etherdoor}
+  \href{https://github.com/ethereum-internet-access/etherdoor}{etherdoor on GitHub}
+\bibitem{express}
+  \href{https://expressjs.com/}{https://expressjs.com/}
 
 \bibitem{5gcity} \href{https://www.5gcity.eu/}{https://www.5gcity.eu/}
-\bibitem{allen}  \href{Christopher Allen, The path to self sovereign identity, 2016}
-  {http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html}
+\bibitem{allen}  \href{http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html}
+  {C. Allen, The path to self sovereign identity, 2016}
 \bibitem{identicat}
-  \href{Catalonia to Build DLT-Based Identity, Coindesk, 2019}{https://www.coindesk.com/catalonia-government-to-build-dlt-based-identity-platform-for-citizens}
+  \href{https://www.coindesk.com/catalonia-government-to-build-dlt-based-identity-platform-for-citizens}
+       {Catalonia to Build DLT Identity, Coindesk, 2019}
 
 
 \bibitem{Coinbase19} Coinbase. Intercambio de moneda digital \href{https://www.coinbase.com/price/ethereum}{https://www.coinbase.com/price/ethereum}
 \bibitem{ConsenSys19} Ethereum Smart Contract Best Practices. Security tools. ConsenSys. 12 Agosto 2019.
-\bibitem{Docker19} Docker Documentation. How nodes work. 6 Septiembre 2019.  \href{https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/}{https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/}
+\bibitem{Docker19} Docker Documentation. How nodes work. 6 Septiembre 2019.  \href{https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/}{Docker Swarm}
 \bibitem{ETHBerlinZwei19} Hackathon ETH Berlín Zwei. Twitter. 6 Septiembre 2019. \href{https://twitter.com/ETHBerlin}{https://twitter.com/ETHBerlin}
 \bibitem{Hegedus18} P. Hegedus. "Towards Analyzing the Complexity Landscape of Solidity Based Ethereum Smart Contracts". 2018 IEEE/ACM 1st International Workshop on Emerging Trends in Software Engineering for Blockchain (WETSEB). 27 Mayo-3 Junio 2018. \href{https://ieeexplore.ieee.org/document/8445056}{https://ieeexplore.ieee.org/document/8445056}
 \bibitem{MakerDAO19} MakerDAO. Stability for the blockchain.  \href{https://makerdao.com/en/dai}{https://makerdao.com/en/dai}
