@@ -645,17 +645,69 @@ This is done to allow bootstrapped \texttt{setInterval}
 on the previously described \texttt{POST mac/} to process
 the timeout business logic.
 
-\subsubsection{etherdoor}
+\subsubsection{etherdoor} A very simple front-end based on React
+using material styling; App's main \texttt{componentDidMount}
+initializes the state including Web3 object and smart contract
+wrapper, gets current connection status from backend's
+\texttt{GET mac} endpoint and creates the micro-payment
+state channel ephemeral account; at the end triggers a
+\texttt{setInterval} loop that when connection activates,
+will be responsible of sending proper signed micro-payments.
 
-\vspace{0.35cm}
+\begin{center}
+  \includegraphics[keepaspectratio, width=0.4\textwidth]{images/portal-y.eps}
+  \\
+  Figure . \textit{etherdoor front-end landing page}
+\end{center}
+
+Usage depends on some button clicking, triggering
+\texttt{someMinutesPass} function invokation that launches MetaMask
+as Web3 provider making possible to the user to open a channel
+on the smart contract building a transaction and relaying it
+through \texttt{infuraProxy}; it also invokes \texttt{startChannel}
+that will update React's App state and will cause
+\texttt{signMicroPayment} function to periodically on a 10 seconds
+interval to sign and post to the backend the increasing amount
+micro-payments.
 
 \section{Quality considerations}\label{sec:proofs}
 
 \vspace{0.35cm}
 
-To validate the PoC, a battery of tests has been defined. For example, given
-that smart contract normally handle money, it is essential to ensure that
+To validate the PoC, a battery of tests has
+been defined. For example, given
+that smart contract normally handle money,
+it is essential to ensure that
 its number of failures and vulnerabilities is low [Hegedus 18].
+
+\subsection{State channel contract tests}
+
+\vspace{0.35cm}
+
+During development and in order to ease
+the automatic deployment of the contract
+over a Truffle's suite Ganache-CLI\ref{ganache}
+instance there are two util scripts on the
+repository\cite{state-channel-contract-a}
+\texttt{utils/compile.js} and \texttt{utils/deploy.js}
+that take care of merging all the Solidity source
+code required and deploying it to the Ganache instance.
+
+\vspace{0.35cm}
+
+In repository\cite{state-channel-contract-a} module
+\texttt{tests/main.test.js} there are the following Mocha
+framework\cite{mocha} based tests; tests use Chai assertion
+library\cite{chai} using its \textit{should} mode whenever
+possible but some of the assertions still have to be done
+by \texttt{try-catch} pattern due to Chai not supporting
+at the time of writing \texttt{BigInt} operation.
+
+
+
+\vspace{0.35cm}
+
+
 To help developers and make technology more mature,
 we need analysis tools [ConsenSys 19].
 
@@ -1041,6 +1093,16 @@ El código fuente generado en el proyecto está publicado en un repositorio púb
   \href{https://github.com/ethereum-internet-access/etherdoor}{etherdoor on GitHub}
 \bibitem{express}
   \href{https://expressjs.com/}{https://expressjs.com/}
+
+\bibitem{ganache}
+  \href{https://github.com/trufflesuite/ganache-cli}{https://github.com/trufflesuite/ganache-cli}
+
+\bibitem{express}
+  \href{https://expressjs.com/}{https://expressjs.com/}
+\bibitem{mocha}
+  \href{https://mochajs.org/}{https://mochajs.org/}
+\bibitem{chai}
+  \href{https://chaijs.org/}{https://chaijs.org/}
 
 \bibitem{5gcity} \href{https://www.5gcity.eu/}{https://www.5gcity.eu/}
 \bibitem{allen}  \href{http://www.lifewithalacrity.com/2016/04/the-path-to-self-soverereign-identity.html}
