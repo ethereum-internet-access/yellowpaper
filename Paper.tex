@@ -686,7 +686,7 @@ its number of failures and vulnerabilities is low [Hegedus 18].
 
 During development and in order to ease
 the automatic deployment of the contract
-over a Truffle's suite Ganache-CLI\ref{ganache}
+over a Truffle's suite Ganache-CLI\cite{ganache}
 instance there are two util scripts on the
 repository\cite{state-channel-contract-a}
 \texttt{utils/compile.js} and \texttt{utils/deploy.js}
@@ -696,17 +696,38 @@ code required and deploying it to the Ganache instance.
 \vspace{0.35cm}
 
 In repository\cite{state-channel-contract-a} module
-\texttt{tests/main.test.js} there are the following Mocha
+\texttt{main.test.js} there are the following Mocha
 framework\cite{mocha} based tests; tests use Chai assertion
 library\cite{chai} using its \textit{should} mode whenever
 possible but some of the assertions still have to be done
 by \texttt{try-catch} pattern due to Chai not supporting
 at the time of writing \texttt{BigInt} operation.
 
+\vspace{0.35cm}
 
+Non-trivial tests covering main workflows include:
+\begin{itemize}
+\item Contract requires a minimum value amount to open a channel.
+\item A user can open a channel sending value over a minimum amount sending
+  also an Ethereum ephemeral public key
+\item Prevention of closing channel operation using a different private key
+  in signature.
+\item Ability of the contract owner to close the channel using a properly
+  generated user signature.
+\item If channel is not closed by the owner, the user, cannot close it
+  before a certain amount of time.
+\item In case reaching expiration time without the owner properly closing the channel,
+  the user can close the channel receiving in return unexpended amount.
+\end{itemize}
+
+\subsection{Front-end \& Back-end manual testing}
 
 \vspace{0.35cm}
 
+Both components were heavily manually tested, during development
+in order to assure the correct workflows were correctly supported.
+
+\vspace{0.35cm}
 
 To help developers and make technology more mature,
 we need analysis tools [ConsenSys 19].
@@ -776,6 +797,44 @@ $ cd docker
 $ sh ./install-project\
   -inside-docker-container.sh
 \end{verbatim}
+
+\section{Security considerations}
+
+\subsection{Network security}
+
+\vspace{0.35cm}
+
+Network security of the PoC depicted in this work
+has some issues having to do with the ability of
+an attacker to associate to owner's network without
+any authentication nor authorization protocol; taking
+this into account, special care has to be taken to
+properly secure any attack surface:
+
+\begin{itemize}
+\item Add firewall rules to prevent IP traffic between
+  different end users.
+\item Obviously securize the connectivity to the Raspberry
+  using a wire connection and filtering any traffic on 22 (ssh)
+  port coming from the wireless interface.
+\item For this PoC, using only the captive portal IP address; TLS
+  is not supported; accordingly the user has no guarantee of
+  authenticity of the WiFi service provider.
+\end{itemize}
+
+\subsection{Cryptographic security}
+
+\vspace{0.35cm}
+
+All smart contract-blockchain transactions are being processed
+using Infura as an Ethereum proxy; only security issue regarding
+private key management arises when considering the ephemeral
+private keypair generation on the front-end.
+
+\subsection{Security summary}
+
+\vspace{0.35cm}
+
 
 
 \section{Regulation status}
@@ -1137,6 +1196,7 @@ problem can be completely avoided.
 Figure 7. ETH Price chart (11/08/2019). Source: [Coinbase 19]
 \\
 \end{center}
+
 
 %% \subsection{Añadir forma de pago DAI} \label{ch:dai}
 %% DAI es una criptomoneda estable (\textit{stablecoin}) que funciona con ETH y que intenta mantener un valor de 1\$. A diferencia de los billetes de banco centralizados, DAI no está respaldado por dólares estadounidenses en una cuenta bancaria. En cambio, está respaldado por garantías en la plataforma Maker [MakerDAO 19].
