@@ -98,7 +98,7 @@
 
 
 \begin{abstract}
-  \begin{center}
+%  \begin{center}
     This document contains authors' ``\textit{Blockchain
       technologies master}''\footnote{UPC School
       of Professional \& Executive Development}
@@ -123,7 +123,8 @@
     ideally achieving an unprecedented transparency guarantee to consumers and
     a fully GDPR compliant
     schema relying on a self-sovereign identity system.
-  \end{center}
+
+%  \end{center}
 \end{abstract}
 
 \maketitle
@@ -134,7 +135,7 @@
 
 \vspace*{5cm}
 
-\begin{center}
+% \begin{center}
 \Huge{\textbf{DISCLAIMER}}
 \vspace{1cm}
 
@@ -154,14 +155,14 @@ security considerations section. Please take this into account
 when using and/or modifying this software and be conscious
 that authors do not provide any guarantee in case of
 security issues, economical loses or regulation infringement.
-\end{center}
+% \end{center}
 
 \vspace{1cm}
 
 \newpage
 
 \vspace*{5cm}
-
+\normalsize
 \begin{verbatim}
 MIT License
 
@@ -728,6 +729,9 @@ Non-trivial tests covering main work-flows include:
 Both components were heavily manually tested, during development
 in order to assure the correct work-flows were correctly supported.
 
+
+\subsection{Static analysis}
+
 \vspace{0.35cm}
 
 To help developers and make technology more mature,
@@ -751,7 +755,7 @@ The installation steps are as follows in:
 \vspace{0.35cm}
 
 https://github.com/ethereum-internet-access/mythril
-Firstly, we analyzed the local source code:
+Firstly, the local source code was analyzed:
 
 \begin{verbatim}
 $ cd contracts
@@ -762,8 +766,8 @@ $ cat ./security-report
 
 \vspace{0.35cm}
 
-Secondly, we analyzed on-chain smart contract.
-Because the smart contract was deployed on Ropsten test-net we executed:
+Secondly, on-chain smart contract was analyzed.
+Because the smart contract was deployed on Ropsten test-net,  executed:
 
 \begin{verbatim}
 $ myth analyze --rpc \
@@ -773,6 +777,66 @@ $ myth analyze --rpc \
 $ cat ./security-report
 \end{verbatim}
 
+
+\subsubsection{Analysis tools outcome}
+
+\paragraph{Dependence on predictable environment variable}
+
+Both Mythrill and Manticore have reported a low severity warning located on function
+\textit{claimTimeOut}, due to the use of the special variable \textit{block.timestamp}, -refered
+to as \textit{now}.
+
+Mythril states:
+
+\textit{A control flow decision is made based
+on a predictable variable. The block.timestamp environment variable is used in to determine
+a control flow decision. Note that the values of variables like coinbase, gaslimit,
+block number and timestamp are predictable and can be manipulated by a malicious miner.
+Also keep in mind that attackers know hashes of earlier blocks. Don't use any of those
+environment variables for random number generation or to make critical control flow decisions.}
+
+\vspace{0.35cm}
+
+This warning is considered assumable due to this two facts: 1) the tiny incentive for the
+malicious miner, who merely could steal the few \textit{weis} value of a channel in favour
+of the \textit{user}, and 2) the uncertainty of reaching the goal of claiming the refund
+before the contract owner closes it.
+
+\vspace{0.35cm}
+
+\paragraph{Multiple Calls in a Single Transaction}
+
+Mythrill also reports this low severity warning located on function \textit{closeChannel}:
+
+\textit{Multiple calls are executed in the same
+transaction. This call is executed after a previous call in the same transaction.
+Try to isolate each call, transfer or send into its own transaction.}
+
+\vspace{0.35cm}
+
+A workaround in order to avoid this issue couldn't be found, due to the fact that both
+transfers must be done and for the low amount of value
+allowed in implied transactions authors preferred
+the push over pull pattern to avoid on-chain transaction overhead.
+In the \textit{Writing a Simple Payment Channel} example available in
+\href{https://solidity.readthedocs.io/en/latest/solidity-by-example.html#micropayment-channel}{Micropayment Channel},
+a \textit{selfdestruct} is proposed. But in this project, a single smart contract is expected
+to support several channels, rather than deploying a fresh contract in every connection.
+Furthermore, both calls to \textit{transfer} happen after any changes to state variables,
+so the contract is not vulnerable to a reentrancy exploit.
+
+\paragraph{Beyond the scope of a PoC}
+
+Some improvements should be considered prior to taking the \textit{StateChannel.sol}
+implementation beyond the scope of this PoC:
+\begin{itemize}
+\item a setter function for \textit{pricePerSecond} should be in place. However, for the sake of
+fairness, nobody should be allowed to update the price after the channel is opened. So therefore,
+a new atribute storing the current channel price should be added to the \textit{ChannelData} struct.
+\item minimal price allowed in channel openning should be a variable, rather than a hardcoded value.
+\item only accepting ETH is a hard constrain that probably will frustrate any chance of a massive
+adoption of this offering: ERC20 tokens should be considered.
+\end{itemize}
 
 \section{Deployment}\label{sec:deploy}
 
@@ -1054,7 +1118,7 @@ support the \textit{Know Your Customer - KyC} required by regulation.
 \vspace{0.35cm}
 
 To take into account the problem illustrated in previous paragraph
-we can take as a basis a model of self-sovereign identity\cite{allen}
+a model of self-sovereign identity\cite{allen} can be taken as a basis
 and in particular the one recently announced by the authorities
 of Catalonia's government\cite{identicat} that will provide credentials
 to citizens using DLT technologies as a Public Key Infrastructure; this
@@ -1244,7 +1308,7 @@ guarantee a fair competition market as outcome.
 
 \vspace{0.35cm}
 
-World we live today is interconnected and wireless
+World today is interconnected and wireless
 internet access has a fundamental role. In this project
 a Proof of Concept has been build. This PoC based in
 commodity free hardware asset (Raspberry Pi) can serve
