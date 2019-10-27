@@ -269,7 +269,7 @@ with not a single point of failure.
 The consensus mechanism ensures a common order
 of unambiguous transactions and
 blocks, and guarantees integrity and
-blockchain consistency a
+blockchain consistency
 through geographically distributed nodes.
 By its design, the blockchain has characteristics
 such as: decentralization, integrity and audibility.
@@ -288,7 +288,8 @@ split into two types:
 as a platform for smart contracts
 (hereinafter, \textit{smart contracts}).
 For example, programmed in the Solidity language of
-Ethereum, stay and run.
+Ethereum that are able to be compiled into Ethereum
+Virtual Machine bytecode and run over this EVM.
 Blockchain is a technology concept
 DLT distributed ledger
 (\textit{distributed ledger technology}).
@@ -544,11 +545,11 @@ of the user and also the purchased service value.
 
 \vspace{0.35cm}
 
-\paragraph{\texttt{closeChannel}} Accepts the amount of ETH to refund
-to sender, the \texttt{channelId} and the \texttt{signature} of the
-payer; checks the signature and after updating the state, transfers
-the amount to the owner of the contract and the return to the channel
-opener.
+\paragraph{\texttt{closeChannel}} Accepts the amount of ETH to
+transfer to the contract owner, the channelId and the signature of the
+payer; checks the signature, calculates the non used purchase value
+and, after updating the state, transfers both the amount to the owner
+of the contract, and the return to the channel opener
 
 \vspace{0.35cm}
 
@@ -691,7 +692,7 @@ its number of failures and vulnerabilities is low\cite{Hegedus18}.
 During development and in order to ease
 the automatic deployment of the contract
 over a Truffle's suite Ganache-CLI\cite{ganache}
-instance there are two until scripts on the
+instance there are two util scripts on the
 repository\cite{state-channel-contract-a}
 \texttt{utils/compile.js} and \texttt{utils/deploy.js}
 that take care of merging all the Solidity source
